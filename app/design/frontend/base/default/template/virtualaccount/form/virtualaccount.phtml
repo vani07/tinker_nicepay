@@ -1,0 +1,31 @@
+<?php $_code = $this->getMethodCode() ?>
+<?php $bank_cd = array(
+        "BMRI" => array("Mandiri", "mandiri.png"),
+        "BBBA" => array("Permata Bank", "permatabank.png"),
+        "IBBK" => array("Maybank", "maybank.png"),
+        "BNIN" => array("BNI", "bni.png"),
+        "HNBN" => array("KEB Hana", "kebhaga.png"),
+		    "CENA" => array("BCA", "bca.png"),
+		    "BRIN" => array("BRI", "bri.png"),
+		    "BNIA" => array("CIMB Niaga", "cimb.png"),
+		    "BDIN" => array("Danamon", "danamon.png")
+    );
+?>
+<fieldset class="form-list">
+    <?php /*?><label for="<?php echo $_code ?>_bank_cd" style="float: none;"><span><?php echo $this->__('Bank Transfer') ?>, <?php echo $this->__('Choose bank') ?>:</span></label><?php */?>
+    <label for="<?php echo $_code ?>_bank_cd" style="float: none;"><span><?php echo $this->__('Choose bank') ?>:</span></label>
+    <ul id="payment_form_<?php echo $_code ?>" style="display: none;margin-top: 7px;">
+        <?php foreach($bank_cd as $bank_code => $bank): ?>
+        <li style="width: 49%;float: left;">
+            <div class="input-box">
+                <input type="radio" id="<?php echo "payment__additional_information__bank_cd__{$bank_code}"; ?>" name="payment[additional_information][bank_cd]" value="<?php echo $bank_code; ?>">
+                <label for="<?php echo "payment__additional_information__bank_cd__{$bank_code}"; ?>" style="float: none;">
+                <img src="<?php echo Mage::getBaseUrl(Mage_Core_Model_Store::URL_TYPE_JS)."/nicepay/".$bank[1]; ?>" class="nicepay-logo-bank" ></label>
+            </div>
+        </li>
+        <?php endforeach; ?>
+        <li class="info" style="float: none;clear: both;text-align: right;font-size: 11px;">
+            <?php echo $this->__('You will be redirected to the NICEPAY website when you place an order.') ?>
+        </li>
+    </ul>
+</fieldset>

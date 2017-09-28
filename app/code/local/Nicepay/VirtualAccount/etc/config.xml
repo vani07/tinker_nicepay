@@ -1,0 +1,62 @@
+<?xml version="1.0"?>
+<config>
+  <modules>
+    <Nicepay_VirtualAccount>
+      <version>0.1.7</version>
+    </Nicepay_VirtualAccount>
+  </modules>
+  
+  <global>
+    <models>
+      <virtualaccount>
+        <class>Nicepay_VirtualAccount_Model</class>
+      </virtualaccount>
+    </models>
+    <helpers>
+      <virtualaccount>
+        <class>Nicepay_VirtualAccount_Helper</class>
+      </virtualaccount>
+    </helpers>
+    <blocks>
+      <virtualaccount>
+        <class>Nicepay_VirtualAccount_Block</class>
+      </virtualaccount>
+    </blocks>
+	<template>
+		<email>			
+			<nicepay_manual_payment>
+				<label>Nicepay Manual Payment</label>
+				<file>sales/nicepay_manual_payment.html</file>
+				<type>html</type>
+			</nicepay_manual_payment>
+		</email>
+	</template>
+  </global>
+  
+  <default>
+    <payment>
+      <virtualaccount>
+        <model>virtualaccount/standard</model>
+        <active>1</active>
+        <order_status>pending</order_status>
+        <title>Bank Transfer (Nicepay) </title>
+        <payment_action>authorize</payment_action>
+        <allowspecific>0</allowspecific>
+		<nicepay_debug>0</nicepay_debug>
+        <sort_order>1</sort_order>
+      </virtualaccount>
+    </payment>
+  </default>
+  
+  <frontend>
+    <routers>
+      <virtualaccount>
+        <use>standard</use>
+        <args>
+          <module>Nicepay_VirtualAccount</module>
+          <frontName>virtualaccount</frontName>
+        </args>
+      </virtualaccount>
+    </routers>
+  </frontend>
+</config>

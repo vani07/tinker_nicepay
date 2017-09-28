@@ -1,0 +1,13 @@
+<?xml version="1.0"?>
+<config>
+  <modules>
+    <Nicepay_CreditCard>
+      <active>true</active>
+      <codePool>local</codePool>
+	  <depends>
+        <Mage_Payment />
+      </depends>
+      <version>0.1.6</version>
+    </Nicepay_CreditCard>
+  </modules>
+</config>

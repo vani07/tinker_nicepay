@@ -1,0 +1,67 @@
+<?xml version="1.0"?>
+<config>
+  <modules>
+    <Nicepay_CreditCard>
+      <version>0.1.7</version>
+    </Nicepay_CreditCard>
+  </modules>
+  
+  <global>
+    <models>
+      <creditcard>
+        <class>Nicepay_CreditCard_Model</class>
+      </creditcard>
+    </models>
+    <helpers>
+      <creditcard>
+        <class>Nicepay_CreditCard_Helper</class>
+      </creditcard>
+    </helpers>
+    <blocks>
+      <creditcard>
+        <class>Nicepay_CreditCard_Block</class>
+      </creditcard>
+    </blocks>
+	<template>
+		<email>
+			<nicepay_order_status_email>
+				<label>Nicepay Order Update Status</label>
+				<file>sales/nicepay_order_update.html</file>
+				<type>html</type>
+			</nicepay_order_status_email>
+			<nicepay_order_new_email>
+				<label>Nicepay Order New</label>
+				<file>sales/nicepay_order_new.html</file>
+				<type>html</type>
+			</nicepay_order_new_email>
+		</email>
+	</template>
+  </global>
+  
+  <default>
+    <payment>
+      <creditcard>
+        <model>creditcard/standard</model>
+        <active>1</active>
+        <order_status>pending</order_status>
+        <title>Credit Card (Nicepay) </title>
+        <payment_action>authorize</payment_action>
+        <allowspecific>0</allowspecific>
+		<nicepay_debug>0</nicepay_debug>
+        <sort_order>1</sort_order>
+      </creditcard>
+    </payment>
+  </default>
+  
+  <frontend>
+    <routers>
+      <creditcard>
+        <use>standard</use>
+        <args>
+          <module>Nicepay_CreditCard</module>
+          <frontName>creditcard</frontName>
+        </args>
+      </creditcard>
+    </routers>
+  </frontend>
+</config>

@@ -1,0 +1,45 @@
+<?php
+	$desc = Mage::registry('desc');
+	$amount = Mage::registry('amount');
+	$bank = Mage::registry('bank');
+	$bankContent = Mage::registry('bankContent');	
+	$va = Mage::registry('va');	
+	$expDate = Mage::registry('expDate');	
+?>
+<style>
+	div#paymentcc table tr td{
+		padding: 5px;
+	}
+</style>
+<div id="paymentcc">
+	<h1>Informasi Pembayaran / Payment Information</h1>
+	<table border="1" width="100%">
+		<tr>
+			<td>Description</td><td><?php echo $desc; ?></td>			
+		</tr>
+		<tr>
+			<td>Amount</td><td>Rp. <?php echo $amount; ?></td>			
+		</tr>
+		<tr>
+			<td>Bank</td><td><?php echo $bank; ?></td>			
+		</tr>
+		<tr>
+			<td>Account</td><td><?php echo $va; ?></td>			
+		</tr>
+		<tr>
+			<td>Expired Date</td><td><?php echo $expDate; ?></td>			
+		</tr>
+	</table>
+	<br/>
+	Pembayaran melalui Bank Transfer <?php echo $bank; ?> dapat dilakukan dengan mengikuti petunjuk berikut :
+	<br/>
+	<br/>
+	<?php echo $bankContent; ?>
+	<br/>
+	<br/>
+	<br/>
+	<br/>
+</div>
+<script>	
+	document.getElementsByClassName("col-main")[0].style = "float:left;";
+</script>

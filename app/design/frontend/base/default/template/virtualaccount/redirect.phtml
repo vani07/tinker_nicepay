@@ -1,0 +1,48 @@
+<?php
+	$js_base_url = Mage::registry('js_base_url');
+	$returnUrl = Mage::registry('returnUrl');
+	
+	$desc = Mage::registry('desc');
+	$amount = Mage::registry('amount');
+	$bank = Mage::registry('bank');
+	$bankCd = Mage::registry('bankCd');	
+	$va = Mage::registry('va');	
+	$expDate = Mage::registry('expDate');	
+?>
+<div id="paymentcc">
+	<table align="center">
+		<tr>
+			<td style="text-align: center;">
+				<div id="subtitle" style="text-align: center">
+					Please wait...<br/>You will be redirected in <span id="running-time">5</span> second <br/><br/>
+					<center><img src="<?php echo $js_base_url ?>nicepay/load.gif" width="50%"></center>
+					<br/><br/>
+					<div style="color: red; font-weight: bold;">DO NOT CLOSE THIS WINDOW</div>
+				</div>
+			</td>
+		</tr>
+	</table>
+</div>
+<form name="redirectForm" action="<?php echo $returnUrl; ?>" method="GET">
+	<input type="hidden" name="desc" value="<?php echo $desc; ?>" readonly />
+	<input type="hidden" name="amount" value="<?php echo $amount; ?>" readonly />
+	<input type="hidden" name="bank" value="<?php echo $bank; ?>" readonly />
+	<input type="hidden" name="bankCd" value="<?php echo $bankCd; ?>" readonly />
+	<input type="hidden" name="va" value="<?php echo $va; ?>" readonly />
+	<input type="hidden" name="expDate" value="<?php echo $expDate; ?>" readonly />
+</form>
+<script>
+	setInterval(function(){
+		var time = document.getElementById("running-time").innerHTML;
+		time = parseInt(time) - 1;
+		if(time >= 0){
+			document.getElementById("running-time").innerHTML = time;		
+		}
+	}, 1000);
+	setTimeout(function(){
+		window.redirectForm.submit();
+	}, 5000);
+</script>
+<?php
+	
+?>
