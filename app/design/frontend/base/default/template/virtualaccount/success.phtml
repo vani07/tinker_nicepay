@@ -4,42 +4,915 @@
 	$bank = Mage::registry('bank');
 	$bankContent = Mage::registry('bankContent');	
 	$va = Mage::registry('va');	
-	$expDate = Mage::registry('expDate');	
+	$expDate = Mage::registry('expDate');
+
+	if ($bank != '') {
+			
+	
 ?>
-<style>
-	div#paymentcc table tr td{
-		padding: 5px;
-	}
-</style>
+
 <div id="paymentcc">
-	<h1>Informasi Pembayaran / Payment Information</h1>
-	<table border="1" width="100%">
+	<h1>Informasi Pembayaran</h1>
+	<br>
+	<table  width="100%">
 		<tr>
-			<td>Description</td><td><?php echo $desc; ?></td>			
+			<td class="label">Description</td><td>: <?php echo $desc; ?></td>			
 		</tr>
 		<tr>
-			<td>Amount</td><td>Rp. <?php echo $amount; ?></td>			
+			<td class="label">Amount</td><td>: Rp. <?php echo $amount; ?></td>			
 		</tr>
 		<tr>
-			<td>Bank</td><td><?php echo $bank; ?></td>			
+			<td class="label">Bank</td><td>: <?php echo $bank; ?></td>			
 		</tr>
 		<tr>
-			<td>Account</td><td><?php echo $va; ?></td>			
+			<td class="label">Account</td><td>: <?php echo $va; ?></td>			
 		</tr>
 		<tr>
-			<td>Expired Date</td><td><?php echo $expDate; ?></td>			
+			<td class="label">Expired Date</td><td>: <?php echo $expDate; ?></td>			
 		</tr>
 	</table>
 	<br/>
-	Pembayaran melalui Bank Transfer <?php echo $bank; ?> dapat dilakukan dengan mengikuti petunjuk berikut :
+	<p>Pembayaran melalui Bank Transfer <?php echo $bank; ?> dapat dilakukan dengan mengikuti petunjuk berikut :</p>
 	<br/>
 	<br/>
-	<?php echo $bankContent; ?>
+	<!-- <ul class="tabs">
+		<li class="tab">
+           <input type="radio" id="tab-1" name="tab-group-1" checked>
+           <label for="tab-1">
+           		<div class="container">
+           			<div class="col-md-5">
+           				<i class="fa fa-credit-card" style="font-size:24px"></i>	
+           			</div>
+           			<div class="col-md-7 tabs-name">
+           				<p>ATM Danamon</p>
+           			</div>
+           			
+           		</div>
+           </label>
+           
+           <div class="content">
+
+               <ul class="list-instruction">
+							<li>Pilih Menu Pembayaran</li>
+							<li>Pilih Lain-lain</li>
+							<li>Pilih Menu Virtual Account</li>
+							<li>Masukkan Nomor Virtual Account, misal. 7915XXXXXXXXXXXX, kemudian Pilih Benar</li>
+							<li>Data Virtual Account akan ditampilkan, kemudian Pilih Ya</li>
+							<li>Ambil bukti pembayaran Anda dan transaksi selesai</li>
+				 </ul>
+           </div> 
+       </li>
+        
+       <li class="tab tab-mid">
+           <input type="radio" id="tab-2" name="tab-group-1">
+           <label for="tab-2">
+           		<div class="container">
+           			<div class="col-md-5">
+           				<i class="fa fa-mobile" aria-hidden="true" style="font-size:24px"></i>	
+           			</div>
+           			<div class="col-md-7 tabs-name">
+           				<p>Mobile Banking</p>
+           			</div>
+           		</div>
+           </label>
+           
+           <div class="content">
+               <ul class="list-instruction">
+					<li>Login D-Mobile</li>
+					<li>Pilih Menu Pembayaran</li>
+					<li>Pilih Menu Virtual Account</li>
+					<li>Pilih Tambah Biller Baru Pembayaran</li>
+					<li>Tekan Lanjut</li>
+					<li>Masukkan Nomor Virtual Account, misal. 7915XXXXXXXXXXXX</li>
+					<li>Tekan Ajukan</li>
+					<li>Data Virtual Account akan ditampilkan</li>
+					<li>Masukkan mPIN, Pilih Konfirmasi</li>
+					<li>Bukti pembayaran akan dikirimkan melalui sms dan transaksi selesai</li>
+				</ul>
+           </div> 
+       </li>
+        
+        <li class="tab">
+           <input type="radio" id="tab-3" name="tab-group-1">
+           <label for="tab-3">
+           		<div class="container">
+           			<div class="col-md-5">
+           				<i class="fa fa-globe" aria-hidden="true" style="font-size:24px"></i>
+           			</div>
+           			<div class="col-md-7 tabs-name">
+           				<p>Internet Banking </p>
+           			</div>
+           		</div>
+           	</label>
+         
+           <div class="content">
+               <ul class="list-instruction">
+					<p>Tidak tersedia.</p>
+				</ul>
+           </div> 
+       </li>
+	</ul> -->
+	<?php 
+
+    //echo $bankContent;
+
+    switch ($bank) {
+      case 'Mandiri':
+        echo '<ul class="tabs">
+              <li class="tab">
+                     <input type="radio" id="tab-1" name="tab-group-1" checked>
+                     <label for="tab-1">
+                        <div class="container">
+                          <div class="col-md-5">
+                            <i class="fa fa-credit-card" style="font-size:24px"></i>  
+                          </div>
+                          <div class="col-md-7 tabs-name">
+                            <p>ATM Mandiri</p>
+                          </div>
+                          
+                        </div>
+                     </label>
+                     
+                     <div class="content">
+
+                         <ul class="list-instruction">
+                          <li>Pilih menu Bayar/Beli</li>
+                          <li>Pilih menu Lainnya</li>
+                          <li>Pilih menu Multi Payment</li>
+                          <li>Masukkan "70014" sebagai Kode Perusahaan / Institusi, kemudian pilih Benar</li>
+                          <li>Masukkan Transferpay Kode Bayar dengan Virtual Account yang sudah didapatkan</li>
+                          <li>Pilih YA setelah muncul konfirmasi pembayaran</li>
+                          <li>Periksa kembali Nominal Pembayaran Anda pada halaman Konfirmasi Pembayaran, kemudian pilih YA</li>
+                          <li>Ambil bukti pembayaran Anda dan Transaksi selesai</li>
+                        </ul>
+                     </div> 
+                 </li>
+                  
+                 <li class="tab tab-mid">
+                     <input type="radio" id="tab-2" name="tab-group-1">
+                     <label for="tab-2">
+                        <div class="container">
+                          <div class="col-md-5">
+                            <i class="fa fa-mobile" aria-hidden="true" style="font-size:24px"></i>  
+                          </div>
+                          <div class="col-md-7 tabs-name">
+                            <p>Mobile Banking</p>
+                          </div>
+                        </div>
+                     </label>
+                     
+                     <div class="content">
+                         <ul class="list-instruction">
+                          <li>Login Mobile Banking</li>
+                          <li>Pilih menu Bayar</li>
+                          <li>Pilih menu Lainnya</li>
+                          <li>Input Transferpay sebagai penyedia jasa</li>
+                          <li>Input Nomor Virtual Account, misal : 70014XXXXXXXXXXX</li>
+                          <li>Pilih Lanjut</li>
+                          <li>Input OTP dan PIN</li>
+                          <li>Pilih OK</li>
+                          <li>Ambil bukti pembayaran Anda dan Transaksi selesai</li>
+                        </ul>
+                     </div> 
+                 </li>
+                 <li class="tab">
+                     <input type="radio" id="tab-3" name="tab-group-1">
+                     <label for="tab-3">
+                        <div class="container">
+                          <div class="col-md-5">
+                            <i class="fa fa-globe" aria-hidden="true" style="font-size:24px"></i>
+                          </div>
+                          <div class="col-md-7 tabs-name">
+                            <p>Internet Banking </p>
+                          </div>
+                        </div>
+                      </label>
+                   
+                     <div class="content">
+                         <ul class="list-instruction">
+                          <li>Login Internet Banking</li>
+                          <li>Pilih menu Bayar</li>
+                          <li>Pilih menu Multi Payment</li>
+                          <li>Input Transferpay sebagai penyedia jasa</li>
+                          <li>Input Nomor Virtual Account, misal : 70014XXXXXXXXXXX sebagai Kode Bayar</li>
+                          <li>Ceklis IDR</li>
+                          <li>Klik Lanjutkan</li>
+                          <li>Bukti bayar ditampilkan</li>
+                          <li>Transaksi selesai</li>
+                  </ul>
+                     </div> 
+                 </li>
+            </ul>
+            <small>*1 (Satu) Nomor Virtual Account hanya berlaku untuk 1 (Satu) Nomor Pesanan</small>';
+        break;
+      
+      case 'Permata Bank':
+        echo '<ul class="tabs">
+                  <li class="tab">
+                         <input type="radio" id="tab-1" name="tab-group-1" checked>
+                         <label for="tab-1">
+                            <div class="container">
+                              <div class="col-md-5">
+                                <i class="fa fa-credit-card" style="font-size:24px"></i>  
+                              </div>
+                              <div class="col-md-7 tabs-name">
+                                <p>ATM Permata Bank</p>
+                              </div>
+                              
+                            </div>
+                         </label>
+                         
+                         <div class="content">
+
+                             <ul class="list-instruction">
+                              <li>Masukkan Nomor PIN</li>
+                              <li>Pilih menu TRANSAKSI LAINNYA</li>
+                              <li>Pilih menu PEMBAYARAN</li>
+                              <li>Pilih Pembayaran Lain-Lain</li>
+                              <li>Pilih VIRTUAL ACCOUNT</li>
+                              <li>Masukkan 16 digit kode bayar (virtual account)<br/>Contoh : 8625xxxxx</li>
+                              <li>Pada layar akan tampil konfirmasi pembayaran</li>
+                              <li>Pilih BENAR untuk konfirmasi pembayaran</li>
+                              <li>Pilih YA agar struk / bukti transaksi keluar</li>
+                              <li>Transaksi selesai</li>
+                            </ul>
+                         </div> 
+                     </li>
+                      
+                     <li class="tab tab-mid">
+                         <input type="radio" id="tab-2" name="tab-group-1">
+                         <label for="tab-2">
+                            <div class="container">
+                              <div class="col-md-5">
+                                <i class="fa fa-mobile" aria-hidden="true" style="font-size:24px"></i>  
+                              </div>
+                              <div class="col-md-7 tabs-name">
+                                <p>Mobile Banking</p>
+                              </div>
+                            </div>
+                         </label>
+                         
+                         <div class="content">
+                             <ul class="list-instruction">
+                              <li>Login Mobile / Internet Banking</li>
+                              <li>Pilih menu "Pembayaran Tagihan"</li>
+                              <li>Pilih menu "Virtual Account"</li>
+                              <li>Masukkan 16 digit kode bayar (virtual account)<br/>Misal : 8625xxxxx</li>
+                              <li>Masukkan Nominal Pembayaran</li>
+                              <li>Klik Kirim dan Input otentikasi transaksi / Token</li>
+                              <li>Klik Kirim</li>
+                              <li>Bukti Pembayaran Anda akan ditampilkan dan transaksi selesai</li>
+                            </ul>
+                         </div> 
+                     </li>
+                      
+                      <li class="tab">
+                         <input type="radio" id="tab-3" name="tab-group-1">
+                         <label for="tab-3">
+                            <div class="container">
+                              <div class="col-md-5">
+                                <i class="fa fa-globe" aria-hidden="true" style="font-size:24px"></i>
+                              </div>
+                              <div class="col-md-7 tabs-name">
+                                <p>Internet Banking </p>
+                              </div>
+                            </div>
+                          </label>
+                       
+                         <div class="content">
+                             <ul class="list-instruction">
+                              <li>Login Mobile / Internet Banking</li>
+                              <li>Pilih menu "Pembayaran Tagihan"</li>
+                              <li>Pilih menu "Virtual Account"</li>
+                              <li>Masukkan 16 digit kode bayar (virtual account)<br/>Misal : 8625xxxxx</li>
+                              <li>Masukkan Nominal Pembayaran</li>
+                              <li>Klik Kirim dan Input otentikasi transaksi / Token</li>
+                              <li>Klik Kirim</li>
+                              <li>Bukti Pembayaran Anda akan ditampilkan dan transaksi selesai</li>
+                      </ul>
+                         </div> 
+                     </li>
+                </ul>
+            <small>*1 (Satu) Nomor Virtual Account hanya berlaku untuk 1 (Satu) Nomor Pesanan</small>';
+        break;
+      case 'Maybank BII':
+        echo '<ul class="tabs">
+                <li class="tab">
+                       <input type="radio" id="tab-1" name="tab-group-1" checked>
+                       <label for="tab-1">
+                          <div class="container">
+                            <div class="col-md-5">
+                              <i class="fa fa-credit-card" style="font-size:24px"></i>  
+                            </div>
+                            <div class="col-md-7 tabs-name">
+                              <p>ATM Maybank BII</p>
+                            </div>
+                            
+                          </div>
+                       </label>
+                       
+                       <div class="content">
+
+                           <ul class="list-instruction">
+                          <li>Pilih menu "Pembayaran / TOP UP Pulsa"</li>
+                          <li>Pilih jenis transaksi "Virtual Account"</li>
+                          <li>Masukkan Nomor Virtual Account misal : 7812XXXXXXXXXXXX, kemudian pilih "BENAR"</li>
+                          <li>Periksa kembali Nominal Pembayaran Anda pada halaman Konfirmasi Pembayaran</li>
+                          <li>Kemudian Pilih "YA"</li>
+                          <li>Ambil bukti pembayaran Anda dan Transaksi selesai</li>
+                     </ul>
+                       </div> 
+                   </li>
+                    
+                   <li class="tab tab-mid">
+                       <input type="radio" id="tab-2" name="tab-group-1">
+                       <label for="tab-2">
+                          <div class="container">
+                            <div class="col-md-5">
+                              <i class="fa fa-mobile" aria-hidden="true" style="font-size:24px"></i>  
+                            </div>
+                            <div class="col-md-7 tabs-name">
+                              <p>Mobile Banking</p>
+                            </div>
+                          </div>
+                       </label>
+                       
+                       <div class="content">
+                           <ul class="list-instruction">
+                          <li>SMS ke 69811</li>
+                          <li>Ketik TRANSFER (Nomor Virtual Account) (Nominal), Contoh : TRANSFER 7812XXXXXX 10000</li>
+                          <li>Kirim SMS</li>
+                          <li>Anda akan mendapat balasan <br> Transfer dr rek (nomor rekening anda) ke rek (nomor virtual account) sebesar Rp 10.000 <br> Ketik (karakter acak)</li>
+                          <li>Balas SMS tersebut, ketik (karakter acak)</li>
+                          <li>Kirim SMS</li>
+                          <li>Bukti pembayaran Anda akan ditampilkan dan Transaksi selesai</li>
+                    </ul>
+                       </div> 
+                   </li>
+                    
+                    <li class="tab">
+                       <input type="radio" id="tab-3" name="tab-group-1">
+                       <label for="tab-3">
+                          <div class="container">
+                            <div class="col-md-5">
+                              <i class="fa fa-globe" aria-hidden="true" style="font-size:24px"></i>
+                            </div>
+                            <div class="col-md-7 tabs-name">
+                              <p>Internet Banking </p>
+                            </div>
+                          </div>
+                        </label>
+                     
+                       <div class="content">
+                           <ul class="list-instruction">
+                          <li>Login Internet Banking</li>
+                          <li>Pilih Menu Rekening dan Transaksi</li>
+                          <li>Pilih menu Maybank Virtual Account</li>
+                          <li>Pilih sumber tabungan</li>
+                          <li>Masukkan nomor Virtual Account, misal : 7812XXXXXX</li>
+                          <li>Masukkan jumlah uang yang akan ditransfer, misal : 10000</li>
+                          <li>Klik Submit</li>
+                          <li>Layar konfirmasi akan muncul, dan masukkan sms token</li>
+                          <li>Bukti Pembayaran Anda akan ditampilkan dan transaksi selesai</li>
+                    </ul>
+                       </div> 
+                   </li>
+              </ul>
+          <small>*1(Satu) Nomor Virtual Account hanya berlaku untuk 1 (Satu) Nomor Pesanan</small>';
+        break;
+      case 'BNI & Bank Lainnya':
+        echo '<ul class="tabs">
+                  <li class="tab">
+                         <input type="radio" id="tab-1" name="tab-group-1" checked>
+                         <label for="tab-1">
+                            <div class="container">
+                              <div class="col-md-5">
+                                <i class="fa fa-credit-card" style="font-size:24px"></i>  
+                              </div>
+                              <div class="col-md-7 tabs-name">
+                                <p>ATM Bank BNI</p>
+                              </div>
+                              
+                            </div>
+                         </label>
+                         
+                         <div class="content">
+
+                             <ul class="list-instruction">
+                            <li>Pilih menu TRANSFER</li>
+                            <li>Pilih menu Lain</li>
+                            <li>Pilih KE REKENING BNI</li>
+                            <li>Masukkan nominal yang akan ditransfer, misal : 10000</li>
+                            <li>Masukkan nomor virtual account, misal : 8848XXXXXXXXXXXX</li>
+                            <li>Pilih "YA" untuk konfirmasi pembayaran</li>
+                            <li>Ambil bukti pembayaran Anda dan transaksi selesai</li>
+                       </ul>
+                         </div> 
+                     </li>
+                      
+                     <li class="tab tab-mid">
+                         <input type="radio" id="tab-2" name="tab-group-1">
+                         <label for="tab-2">
+                            <div class="container">
+                              <div class="col-md-5">
+                                <i class="fa fa-mobile" aria-hidden="true" style="font-size:24px"></i>  
+                              </div>
+                              <div class="col-md-7 tabs-name">
+                                <p>Mobile Banking</p>
+                              </div>
+                            </div>
+                         </label>
+                         
+                         <div class="content">
+                             <ul class="list-instruction">
+                            <li>Pilih Menu Transfer pada masing - masing ATM sesuai bank yang digunakan</li>
+                            <li>Pilih Bank Lainnya</li>
+                            <li>Input Kode Bank, <b>009</b></li>
+                            <li>Input nomor virtual account Number, misal. 8848XXXXXXXXXXXXX</li>
+                            <li>Input nominal pembayaran, misal. 10000</li>
+                            <li>Pilih Benar</li>
+                            <li>Pilih Ya</li>
+                            <li>Ambil bukti pembayaran Anda dan Transaksi selesai</li>
+                      </ul>
+                         </div> 
+                     </li>
+                      
+                      <li class="tab">
+                         <input type="radio" id="tab-3" name="tab-group-1">
+                         <label for="tab-3">
+                            <div class="container">
+                              <div class="col-md-5">
+                                <i class="fa fa-globe" aria-hidden="true" style="font-size:24px"></i>
+                              </div>
+                              <div class="col-md-7 tabs-name">
+                                <p>Internet Banking </p>
+                              </div>
+                            </div>
+                          </label>
+                       
+                         <div class="content">
+                             <ul class="list-instruction">
+                          <li>Login Mobile Banking</li>
+                          <li>Pilih Transfer</li>
+                          <li>Pilih Antar Rekening BNI</li>
+                          <li>Pilih Rekening Tujuan</li>
+                          <li>Pilih Input Rekening Baru</li>
+                          <li>Masukkan Nomor Virtual Account sebagai Nomor Rekening misal, 8848XXXXXXXXXXXX</li>
+                          <li>Klik Lanjut</li>
+                          <li>Klik Lanjut Kembali</li>
+                          <li>Masukkan Nominal Tagihan. misal, 10000</li>
+                          <li>Klik Lanjut</li>
+                          <li>Periksa Detail Konfirmasi. Pastikan Data Sudah Benar</li>
+                          <li>Jika Sudah Benar, Masukkan Password Transaksi</li>
+                          <li>Klik Lanjut</li>
+                          <li>Bukti Pembayaran Anda akan ditampilkan dan transaksi selesai</li>
+                      </ul>
+                         </div> 
+                     </li>
+                </ul>
+            <small>*1(Satu) Nomor Virtual Account hanya berlaku untuk 1 (Satu) Nomor Pesanan</small>';
+        break;
+        case 'BCA':
+          echo '<ul class="tabs">
+                  <li class="tab">
+                       <input type="radio" id="tab-1" name="tab-group-1" checked>
+                       <label for="tab-1">
+                          <div class="container">
+                            <div class="col-md-5">
+                              <i class="fa fa-credit-card" style="font-size:24px"></i>  
+                            </div>
+                            <div class="col-md-7 tabs-name">
+                              <p>ATM Bank BCA</p>
+                            </div>
+                            
+                          </div>
+                       </label>
+                       
+                       <div class="content">
+
+                           <ul class="list-instruction">
+                            <li>Pilih Menu Transaksi Lainnya</li>
+                            <li>Pilih Transfer</li>
+                            <li>Pilih Ke rekening BCA Virtual Account</li>
+                            <li>Input Nomor Virtual Account, misal. 123456789012XXXX, kemudian Pilih BENAR</li>
+                            <li>Ambil bukti pembayaran Anda dan Transaksi selesai</li>
+                       </ul>
+                       </div> 
+                   </li>
+                    
+                   <li class="tab tab-mid">
+                       <input type="radio" id="tab-2" name="tab-group-1">
+                       <label for="tab-2">
+                          <div class="container">
+                            <div class="col-md-5">
+                              <i class="fa fa-mobile" aria-hidden="true" style="font-size:24px"></i>  
+                            </div>
+                            <div class="col-md-7 tabs-name">
+                              <p>Mobile Banking</p>
+                            </div>
+                          </div>
+                       </label>
+                       
+                       <div class="content">
+                           <ul class="list-instruction">
+                            <li>Login Mobile Banking</li>
+                            <li>Pilih m-Transfer</li>
+                            <li>Pilih BCA Virtual Account</li>
+                            <li>Input Nomor Virtual Account, misal. 123456789012XXXX sebagai No. Virtual Account</li>
+                            <li>Klik Send</li>
+                            <li>Informasi VA akan ditampilkan, kemudian Klik OK</li>
+                            <li>Input PIN Mobile Banking</li>
+                            <li>Bukti pembayaran Anda akan ditampilkan dan Transaksi selesai</li>
+                      </ul>
+                       </div> 
+                   </li>
+                    
+                    <li class="tab">
+                       <input type="radio" id="tab-3" name="tab-group-1">
+                       <label for="tab-3">
+                          <div class="container">
+                            <div class="col-md-5">
+                              <i class="fa fa-globe" aria-hidden="true" style="font-size:24px"></i>
+                            </div>
+                            <div class="col-md-7 tabs-name">
+                              <p>Internet Banking </p>
+                            </div>
+                          </div>
+                        </label>
+                     
+                       <div class="content">
+                           <ul class="list-instruction">
+                          <li>Login Internet Banking</li>
+                          <li>Pilih Transaksi Dana</li>
+                          <li>Pilih Transfer Ke BCA Virtual Account</li>
+                          <li>Input Nomor Virtual Account, misal. 123456789012XXXX sebagai No. Virtual Account</li>
+                          <li>Klik Lanjutkan</li>
+                          <li>Input Respon KeyBCA Appli 1, kemudian Klik Kirim</li>
+                          <li>Bukti pembayaran Anda akan ditampilkan dan Transaksi selesai</li>
+                      </ul>
+                       </div> 
+                   </li>
+                </ul>
+            <small>*1(Satu) Nomor Virtual Account hanya berlaku untuk 1 (Satu) Nomor Pesanan</small>';
+          break;
+      case 'CIMB Niaga':
+        echo '<ul class="tabs">
+                    <li class="tab">
+                           <input type="radio" id="tab-1" name="tab-group-1" checked>
+                           <label for="tab-1">
+                              <div class="container">
+                                <div class="col-md-5">
+                                  <i class="fa fa-credit-card" style="font-size:24px"></i>  
+                                </div>
+                                <div class="col-md-7 tabs-name">
+                                  <p>ATM CIMB Niaga</p>
+                                </div>
+                                
+                              </div>
+                           </label>
+                           
+                           <div class="content">
+
+                               <ul class="list-instruction">
+                              <li>Pilih Menu Pembayaran</li>
+                              <li>Pilih Lanjut</li>
+                              <li>Pilih Virtual Account</li>
+                              <li>Masukkan Nomor Virtual Account, misal. 5919XXXXXXXXXXX, kemudian Pilih Proses</li>
+                              <li>Data Virtual Account akan ditampilkan, kemudian Pilih Proses</li>
+                              <li>Ambil bukti pembayaran Anda dan transaksi selesai</li>
+                         </ul>
+                           </div> 
+                       </li>
+                        
+                       <li class="tab tab-mid">
+                           <input type="radio" id="tab-2" name="tab-group-1">
+                           <label for="tab-2">
+                              <div class="container">
+                                <div class="col-md-5">
+                                  <i class="fa fa-mobile" aria-hidden="true" style="font-size:24px"></i>  
+                                </div>
+                                <div class="col-md-7 tabs-name">
+                                  <p>Mobile Banking</p>
+                                </div>
+                              </div>
+                           </label>
+                           
+                           <div class="content">
+                               <ul class="list-instruction">
+                              <li>Login Go Mobile</li>
+                              <li>Pilih Menu Transfer</li>
+                              <li>Pilih Menu Rekening Ponsel/CIMB Niaga lain</li>
+                              <li>Pilih Sumber dana yang akan digunakan</li>
+                              <li>Pilih Casa</li>
+                              <li>Masukkan Nomor Virtual Account, misal. 5919XXXXXXXXXXX</li>
+                              <li>Masukkan Nominal misal. Rp10.000,00.-, Klik Lanjut</li>
+                              <li>Data Virtual Account akan ditampilkan</li>
+                              <li>Masukkan PIN Mobile, Klik Konfirmasi</li>
+                              <li>Bukti pembayaran akan dikirimkan melalui sms dan transaksi selesai</li>
+                        </ul>
+                           </div> 
+                       </li>
+                        
+                        <li class="tab">
+                           <input type="radio" id="tab-3" name="tab-group-1">
+                           <label for="tab-3">
+                              <div class="container">
+                                <div class="col-md-5">
+                                  <i class="fa fa-globe" aria-hidden="true" style="font-size:24px"></i>
+                                </div>
+                                <div class="col-md-7 tabs-name">
+                                  <p>Internet Banking </p>
+                                </div>
+                              </div>
+                            </label>
+                         
+                           <div class="content">
+                               <ul class="list-instruction">
+                            <li>Login Internet Banking</li>
+                            <li>Rekening Sumber – Pilih yang akan anda gunakan</li>
+                            <li>Jenis Pembayaran – Pilih Virtual Account</li>
+                            <li>Untuk Pembayaran – Pilih Masukkan Nomor Virtual Account</li>
+                            <li>Nomor Rekening Virtual, misal. 5919XXXXXXXXXXX</li>
+                            <li>Isi Remark jika diperlukan, kemudian klik Lanjut</li>
+                            <li>Data Virtual Account akan ditampilkan</li>
+                            <li>Masukkan mPIN, Klik Kirim</li>
+                            <li>Bukti pembayaran akan ditampilkan dan transaksi selesai</li>
+                        </ul>
+                           </div> 
+                       </li>
+                  </ul>
+            <small>*1(Satu) Nomor Virtual Account hanya berlaku untuk 1 (Satu) Nomor Pesanan</small>';
+        break;
+      case 'KEB Hana Bank':
+        echo '<ul class="tabs">
+                  <li class="tab">
+                         <input type="radio" id="tab-1" name="tab-group-1" checked>
+                         <label for="tab-1">
+                            <div class="container">
+                              <div class="col-md-5">
+                                <i class="fa fa-credit-card" style="font-size:24px"></i>  
+                              </div>
+                              <div class="col-md-7 tabs-name">
+                                <p>ATM KEB Hana</p>
+                              </div>
+                              
+                            </div>
+                         </label>
+                         
+                         <div class="content">
+
+                             <ul class="list-instruction">
+                            <li>Pilih menu "Pembayaran"</li>
+                            <li>Pilih menu "Lainnya"</li>
+                            <li>Masukkan Nomor Virtual Account, misal 9772XXXXXXXXXXXX</li>
+                            <li>Pilih "BENAR"</li>
+                            <li>Pilih "YA" untuk konfirmasi pembayaran</li>
+                            <li>Ambil bukti pembayaran Anda dan transaksi selesai</li>
+                       </ul>
+                         </div> 
+                     </li>
+                      
+                     <li class="tab tab-mid">
+                         <input type="radio" id="tab-2" name="tab-group-1">
+                         <label for="tab-2">
+                            <div class="container">
+                              <div class="col-md-5">
+                                <i class="fa fa-mobile" aria-hidden="true" style="font-size:24px"></i>  
+                              </div>
+                              <div class="col-md-7 tabs-name">
+                                <p>Mobile Banking</p>
+                              </div>
+                            </div>
+                         </label>
+                         
+                         <div class="content">
+                             <ul class="list-instruction">
+                        <p>Tidak Tersedia.</p>
+                      </ul>
+                         </div> 
+                     </li>
+                      
+                      <li class="tab">
+                         <input type="radio" id="tab-3" name="tab-group-1">
+                         <label for="tab-3">
+                            <div class="container">
+                              <div class="col-md-5">
+                                <i class="fa fa-globe" aria-hidden="true" style="font-size:24px"></i>
+                              </div>
+                              <div class="col-md-7 tabs-name">
+                                <p>Internet Banking </p>
+                              </div>
+                            </div>
+                          </label>
+                       
+                         <div class="content">
+                             <ul class="list-instruction">
+                            <li>Login Internet Banking</li>
+                            <li>Pilih menu "Transfer"</li>
+                            <li>Pilih "Withdrawal Account Information"</li>
+                            <li>Pilih Account Number Anda</li>
+                            <li>Masukkan nomor virtual account <br/>Misal : 9772XXXXXXXXXXXX</li>
+                            <li>Masukkan Nominal Pembayaran, misal : 10000</li>
+                            <li>Klik Submit</li>
+                            <li>Input SMS Pin</li>
+                            <li>Bukti transaksi akan ditampilkan</li>
+                            <li>Transaksi selesai</li>
+                      </ul>
+                         </div> 
+                     </li>
+                </ul>
+            <small>*1(Satu) Nomor Virtual Account hanya berlaku untuk 1 (Satu) Nomor Pesanan</small>';
+        break;
+      case 'BRI':
+        echo '<ul class="tabs">
+                  <li class="tab">
+                         <input type="radio" id="tab-1" name="tab-group-1" checked>
+                         <label for="tab-1">
+                            <div class="container">
+                              <div class="col-md-5">
+                                <i class="fa fa-credit-card" style="font-size:24px"></i>  
+                              </div>
+                              <div class="col-md-7 tabs-name">
+                                <p>ATM BRI</p>
+                              </div>
+                              
+                            </div>
+                         </label>
+                         
+                         <div class="content">
+
+                             <ul class="list-instruction">
+                            <li>Pilih Menu Transaksi Lain</li>
+                            <li>Pilih Menu Pembayaran</li>
+                            <li>Pilih Menu Lain-lain</li>
+                            <li>Pilih Menu BRIVA</li>
+                            <li>Masukkan Nomor Virtual Account, misal. 88788XXXXXXXXXXX, kemudian Pilih YA</li>
+                            <li>Ambil bukti pembayaran Anda dan transaksi selesai</li>
+                       </ul>
+                         </div> 
+                     </li>
+                      
+                     <li class="tab tab-mid">
+                         <input type="radio" id="tab-2" name="tab-group-1">
+                         <label for="tab-2">
+                            <div class="container">
+                              <div class="col-md-5">
+                                <i class="fa fa-mobile" aria-hidden="true" style="font-size:24px"></i>  
+                              </div>
+                              <div class="col-md-7 tabs-name">
+                                <p>Mobile Banking</p>
+                              </div>
+                            </div>
+                         </label>
+                         
+                         <div class="content">
+                             <ul class="list-instruction">
+                        <li>Login BRI Mobile</li>
+                        <li>Pilih Mobile Banking BRI</li>
+                        <li>Pilih Menu Info</li>
+                        <li>Pilih Menu BRIVA</li>
+                        <li>Masukkan Nomor Virtual Account, misal. 88788XXXXXXXXXXX</li>
+                        <li>Masukkan Nominal misal. 10000, Klik Kirim</li>
+                        <li>Masukkan PIN Mobile, Klik Kirim</li>
+                        <li>Bukti pembayaran akan dikirimkan melalui sms dan transaksi selesai</li>
+                      </ul>
+                         </div> 
+                     </li>
+                      
+                      <li class="tab">
+                         <input type="radio" id="tab-3" name="tab-group-1">
+                         <label for="tab-3">
+                            <div class="container">
+                              <div class="col-md-5">
+                                <i class="fa fa-globe" aria-hidden="true" style="font-size:24px"></i>
+                              </div>
+                              <div class="col-md-7 tabs-name">
+                                <p>Internet Banking </p>
+                              </div>
+                            </div>
+                          </label>
+                       
+                         <div class="content">
+                             <ul class="list-instruction">
+                            <li>Login Internet Banking</li>
+                            <li>Pilih Pembayaran</li>
+                            <li>Pilih BRIVA</li>
+                            <li>Masukkan Nomor Virtual Account, misal. 88788XXXXXXXXXXX, Klik Kirim</li>
+                            <li>Masukkan Password dan mToken, Klik Kirim</li>
+                            <li>Bukti pembayaran akan ditampilkan dan transaksi selesai</li>
+                      </ul>
+                         </div> 
+                     </li>
+                </ul>
+            <small>*1(Satu) Nomor Virtual Account hanya berlaku untuk 1 (Satu) Nomor Pesanan</small>';
+        break;
+      case 'Danamon':
+        echo '<ul class="tabs">
+                    <li class="tab">
+                           <input type="radio" id="tab-1" name="tab-group-1" checked>
+                           <label for="tab-1">
+                              <div class="container">
+                                <div class="col-md-5">
+                                  <i class="fa fa-credit-card" style="font-size:24px"></i>  
+                                </div>
+                                <div class="col-md-7 tabs-name">
+                                  <p>ATM Danamon</p>
+                                </div>
+                                
+                              </div>
+                           </label>
+                           
+                           <div class="content">
+
+                               <ul class="list-instruction">
+                              <li>Pilih Menu Pembayaran</li>
+                              <li>Pilih Lain-lain</li>
+                              <li>Pilih Menu Virtual Account</li>
+                              <li>Masukkan Nomor Virtual Account, misal. 7915XXXXXXXXXXXX, kemudian Pilih Benar</li>
+                              <li>Data Virtual Account akan ditampilkan, kemudian Pilih Ya</li>
+                              <li>Ambil bukti pembayaran Anda dan transaksi selesai</li>
+                         </ul>
+                           </div> 
+                       </li>
+                        
+                       <li class="tab tab-mid">
+                           <input type="radio" id="tab-2" name="tab-group-1">
+                           <label for="tab-2">
+                              <div class="container">
+                                <div class="col-md-5">
+                                  <i class="fa fa-mobile" aria-hidden="true" style="font-size:24px"></i>  
+                                </div>
+                                <div class="col-md-7 tabs-name">
+                                  <p>Mobile Banking</p>
+                                </div>
+                              </div>
+                           </label>
+                           
+                           <div class="content">
+                               <ul class="list-instruction">
+                          <li>Login D-Mobile</li>
+                          <li>Pilih Menu Pembayaran</li>
+                          <li>Pilih Menu Virtual Account</li>
+                          <li>Pilih Tambah Biller Baru Pembayaran</li>
+                          <li>Tekan Lanjut</li>
+                          <li>Masukkan Nomor Virtual Account, misal. 7915XXXXXXXXXXXX</li>
+                          <li>Tekan Ajukan</li>
+                          <li>Data Virtual Account akan ditampilkan</li>
+                          <li>Masukkan mPIN, Pilih Konfirmasi</li>
+                          <li>Bukti pembayaran akan dikirimkan melalui sms dan transaksi selesai</li>
+                        </ul>
+                           </div> 
+                       </li>
+                        
+                        <li class="tab">
+                           <input type="radio" id="tab-3" name="tab-group-1">
+                           <label for="tab-3">
+                              <div class="container">
+                                <div class="col-md-5">
+                                  <i class="fa fa-globe" aria-hidden="true" style="font-size:24px"></i>
+                                </div>
+                                <div class="col-md-7 tabs-name">
+                                  <p>Internet Banking </p>
+                                </div>
+                              </div>
+                            </label>
+                         
+                           <div class="content">
+                               <ul class="list-instruction">
+                          <p>Tidak tersedia.</p>
+                        </ul>
+                           </div> 
+                       </li>
+                  </ul>
+            <small>*1(Satu) Nomor Virtual Account hanya berlaku untuk 1 (Satu) Nomor Pesanan</small>';
+        break;
+      default:
+        echo 'No Information';
+        break;
+    }
+
+
+   ?>
 	<br/>
 	<br/>
 	<br/>
+	<div class="buttons-set">
+	    <button type="button" class="button" title="<?php echo Mage::helper('core')->quoteEscape($this->__('Continue Shopping')) ?>" onclick="window.location='<?php echo $this->getUrl() ?>'"><span><span><?php echo $this->__('Continue Shopping') ?></span></span></button>
+	    
+	    <!-- static block facebook pixel-->
+
+	   <?php //echo $this->getLayout()->createBlock('cms/block')->setBlockId('facebook_pixel_success')->toHtml() ?>
+
+	</div>
 	<br/>
+	<?php echo $this->getLayout()->createBlock('cms/block')->setBlockId('category-footer')->toHtml(); ?> 
 </div>
 <script>	
 	document.getElementsByClassName("col-main")[0].style = "float:left;";
 </script>
+
+<?php 	}else{
+
+	header('Location: '.Mage::getBaseUrl(Mage_Core_Model_Store::URL_TYPE_WEB));
+
+} ?>

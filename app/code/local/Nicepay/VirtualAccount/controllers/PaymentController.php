@@ -199,8 +199,10 @@ class Nicepay_VirtualAccount_PaymentController extends Mage_Core_Controller_Fron
 				"bank"=> $this->bank_info($bankCd)["label"],
 				"bankContent" => $this->bank_info($bankCd)["content"],
 				"va" => $response->bankVacctNo,
-				"exp" => $vaExpiryDate
+				"exp" => $vaExpiryDate,
+
 			);
+			
 			$this->sentManualPaymentEmail($order, $variable);
 
 			Mage::register('desc', "Payment of invoice No ".$response->referenceNo);
@@ -330,10 +332,21 @@ class Nicepay_VirtualAccount_PaymentController extends Mage_Core_Controller_Fron
 		Mage::register('bankContent', $this->bank_info(addslashes($_REQUEST["bankCd"]))["content"]);
 		Mage::register('va', addslashes($_REQUEST["va"]));
 		Mage::register('expDate', addslashes($_REQUEST["expDate"]));
+		
+
 		$template = 'virtualaccount/success.phtml';
 
+
+		
 		$this->loadLayout();
+		$orderid = Mage::getSingleton('checkout/session')->getLastRealOrderId();
+		
         $block = $this->getLayout()->createBlock('Mage_Core_Block_Template','virtualaccount',array('template' => $template));
+		Mage::dispatchEvent('checkout_onepage_controller_success_action', array('order_ids' => array($orderid)));
+
+        //diubah menjadi 1 column
+        $this->getLayout()->getBlock('root')->setTemplate('page/1column.phtml');
+
 		$this->getLayout()->getBlock('content')->append($block);
         $this->renderLayout();
 	}
@@ -744,9 +757,9 @@ class Nicepay_VirtualAccount_PaymentController extends Mage_Core_Controller_Fron
 		return $bank[$bankCd];
 	}
 
-	public function sentNewOrderEmail($order){
+	public function sentNewOrderEmail($order,$extVariable){
 		// This is the template name from your etc/config.xml
-		$template_id = 'nicepay_order_new_email';
+		// $template_id = 'nicepay_order_new_email';
 
 		$customerId = $order->getCustomerId();
 		$customer = Mage::getModel('customer/customer')->load($customerId);
@@ -762,59 +775,57 @@ class Nicepay_VirtualAccount_PaymentController extends Mage_Core_Controller_Fron
 		$billingNm = $billing['firstname']." ".$billing['middlename']." ".$billing['lastname'];
 		$billingEmail = $billing['email'];
 
-		// Who were sending to...
-		$receiveEmail = $billingEmail;
-		$receiveName   = $billingNm;
+		//custom sent email
 
 		$storeId = Mage::app()->getStore()->getId();
+		$templateId = Mage::getStoreConfig('sales_email/order/template',$storeId);
+		
 		$sender_name = Mage::getStoreConfig('trans_email/ident_general/name', $storeId);
 		$sender_email = Mage::getStoreConfig('trans_email/ident_general/email', $storeId);
-
-		// Load our template by template_id
-		$emailTemplate = Mage::getModel('core/email_template')->loadDefault($template_id);
-
-		$orderId = $order->getIncrementId();
 		$method = $order->getPayment()->getMethod();
 		$payment = $order->getPayment();
 		$payment->getData($method);
 		$payment_name = $payment->getMethodInstance()->getTitle();
 
-		$comment = "Berhasil !!!";
-		// Here is where we can define custom variables to go in our email template!
-		$variables = array(
+	
+		$vars = array(
 			'order' => $order,
 			'store_name' => $sender_name,
 			'store_email' => $sender_email,
 			'payment_html' => $payment_name
 		);
 
-		$processedTemplate = $emailTemplate->getProcessedTemplate($variables);
+		$receiveEmail = $order->getCustomerEmail();
 
-		//Sending E-Mail to Customers.
-		$mail = Mage::getModel('core/email')
-		 ->setToName($receiveName)
-		 ->setToEmail($receiveEmail)
-		 ->setBody($processedTemplate)
-		 ->setSubject('New Order #'.$orderId)
-		 ->setFromEmail($sender_email)
-		 ->setFromName($sender_name)
-		 ->setType('html');
+		$receiveName = ucfirst($order->getCustomerFirstname());
 
-		try{
-			//Confimation E-Mail Send
-			$mail->send($template_id);
-		}catch(Exception $error){
+		$emailTemplate = Mage::getModel('core/email_template')->load($templateId);
+		$emailTemplate->getProcessedTemplate($vars);
+
+		$emailTemplate->setSenderEmail($sender_email);
+
+		$emailTemplate->setSenderName($sender_name);
+
+		try {
+			
+			$emailTemplate->send($receiveEmail,$receiveName, $vars);
+			
+		} catch (Exception $e) {
+			
 			Mage::getSingleton('core/session')->addError($error->getMessage());
 			return false;
 		}
+		
 	}
 
 	public function sentUpdateOrderEmail($order){
+		
 		// This is the template name from your etc/config.xml
 		$template_id = 'nicepay_order_status_email';
 
 		$customerId = $order->getCustomerId();
 		$customer = Mage::getModel('customer/customer')->load($customerId);
+		
 		if($order->getCustomerIsGuest()){
 			$billing = $order->getBillingAddress()->getData();
 			$shipping = $order->getShippingAddress()->getData();
@@ -824,6 +835,7 @@ class Nicepay_VirtualAccount_PaymentController extends Mage_Core_Controller_Fron
 			$shipping = $customer->getPrimaryShippingAddress()->getData();
 			$shipping['email'] = $order->getShippingAddress()->getEmail();
 		}
+
 		$billingNm = $billing['firstname']." ".$billing['middlename']." ".$billing['lastname'];
 		$billingEmail = $billing['email'];
 
@@ -870,7 +882,11 @@ class Nicepay_VirtualAccount_PaymentController extends Mage_Core_Controller_Fron
 
 	public function sentManualPaymentEmail($order, $extVariable){
 		// This is the template name from your etc/config.xml
-		$template_id = 'nicepay_manual_payment';
+
+		//***********************************************
+		//              || WARNING ||
+		//***********************************************
+		// settingan email manual ada pada new order by guest di config
 
 		$customerId = $order->getCustomerId();
 		$customer = Mage::getModel('customer/customer')->load($customerId);
@@ -888,43 +904,49 @@ class Nicepay_VirtualAccount_PaymentController extends Mage_Core_Controller_Fron
 
 		// Who were sending to...
 		$receiveEmail = $billingEmail;
-		$receiveName   = $billingNm;
+		$receiveName  = $billingNm;
 
 		$storeId = Mage::app()->getStore()->getId();
+		$templateId = Mage::getStoreConfig('sales_email/order/guest_template',$storeId);
+		
 		$sender_name = Mage::getStoreConfig('trans_email/ident_general/name', $storeId);
 		$sender_email = Mage::getStoreConfig('trans_email/ident_general/email', $storeId);
 
 		// Load our template by template_id
-		$emailTemplate = Mage::getModel('core/email_template')->loadDefault($template_id);
+		$emailTemplate = Mage::getModel('core/email_template')->load($templateId);
 
 		$orderId = $order->getIncrementId();
 		// Here is where we can define custom variables to go in our email template!
-		$variables = array(
+		
+		$storeId = Mage::app()->getStore()->getId();
+		$sender_name = Mage::getStoreConfig('trans_email/ident_general/name', $storeId);
+		$sender_email = Mage::getStoreConfig('trans_email/ident_general/email', $storeId);
+		$vars = array(
 			'order' => $order,
 			'store_name' => $sender_name,
-			'store_email' => $sender_email
+			'store_email' => $sender_email,
 		);
 
 		if(is_array($extVariable)){
-			$variables = array_merge($variables, $extVariable);
+			$vars = array_merge($vars, $extVariable);
 		}
 
-		$processedTemplate = $emailTemplate->getProcessedTemplate($variables);
+		$emailTemplate->getProcessedTemplate($vars);
 
-		//Sending E-Mail to Customers.
-		$mail = Mage::getModel('core/email')
-		 ->setToName($receiveName)
-		 ->setToEmail($receiveEmail)
-		 ->setBody($processedTemplate)
-		 ->setSubject('Manual Payment #'.$orderId)
-		 ->setFromEmail($sender_email)
-		 ->setFromName($sender_name)
-		 ->setType('html');
+		$emailTemplate->setSenderEmail($sender_email);
 
-		try{
-			//Confimation E-Mail Send
-			$mail->send($template_id);
-		}catch(Exception $error){
+		$emailTemplate->setSenderName($sender_name);
+		
+		$emailTemplate->setSubject('Manual Payment #'.$orderId);
+		
+
+		try {
+			
+			$emailTemplate->send($receiveEmail,$receiveName, $vars);
+			
+		} catch (Exception $e) {
+			
+			// Mage::logException($e);
 			Mage::getSingleton('core/session')->addError($error->getMessage());
 			return false;
 		}
