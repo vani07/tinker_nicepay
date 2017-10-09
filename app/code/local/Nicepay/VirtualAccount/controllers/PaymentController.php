@@ -340,6 +340,7 @@ class Nicepay_VirtualAccount_PaymentController extends Mage_Core_Controller_Fron
 		
 		$this->loadLayout();
 		$orderid = Mage::getSingleton('checkout/session')->getLastRealOrderId();
+		$orderid = Mage::getModel('sales/order')->loadByIncrementId($orderid)->getId();
 		
         $block = $this->getLayout()->createBlock('Mage_Core_Block_Template','virtualaccount',array('template' => $template));
 		Mage::dispatchEvent('checkout_onepage_controller_success_action', array('order_ids' => array($orderid)));
@@ -800,7 +801,7 @@ class Nicepay_VirtualAccount_PaymentController extends Mage_Core_Controller_Fron
 		$receiveName = ucfirst($order->getCustomerFirstname());
 
 		$emailTemplate = Mage::getModel('core/email_template')->load($templateId);
-		$emailTemplate->getProcessedTemplate($vars);
+			$emailTemplate->getProcessedTemplate($vars);
 
 		$emailTemplate->setSenderEmail($sender_email);
 
