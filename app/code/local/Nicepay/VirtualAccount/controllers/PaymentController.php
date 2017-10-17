@@ -896,7 +896,7 @@ class Nicepay_VirtualAccount_PaymentController extends Mage_Core_Controller_Fron
 		}
 	}
 
-	// public function sentManualPaymentEmail($order, $extVariable){
+	public function sentManualPaymentEmail($order, $extVariable){
 		// This is the template name from your etc/config.xml
 
 		//***********************************************
