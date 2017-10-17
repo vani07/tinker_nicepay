@@ -20,7 +20,7 @@
             <div class="input-box">
                 <input type="radio" id="<?php echo "payment__additional_information__bank_cd__{$bank_code}"; ?>" name="payment[additional_information][bank_cd]" value="<?php echo $bank_code; ?>">
                 <label for="<?php echo "payment__additional_information__bank_cd__{$bank_code}"; ?>" style="float: none;">
-                <img src="<?php echo Mage::getBaseUrl(Mage_Core_Model_Store::URL_TYPE_JS)."/nicepay/".$bank[1]; ?>" class="nicepay-logo-bank" ></label>
+                <img src="<?php echo Mage::getBaseUrl(Mage_Core_Model_Store::URL_TYPE_WEB)."/js/nicepay/".$bank[1]; ?>" class="nicepay-logo-bank" ></label>
             </div>
         </li>
         <?php endforeach; ?>
