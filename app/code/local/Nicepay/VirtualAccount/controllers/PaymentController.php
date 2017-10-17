@@ -29,8 +29,7 @@ class Nicepay_VirtualAccount_PaymentController extends Mage_Core_Controller_Fron
 		$discountDesc = $order->getDiscountDescription();
 		$orderCurrency = $order->getOrderCurrency()->getData()["currency_code"];
 
-		//send email
-		$this->sentNewOrderEmail($order);
+		
 
 		$items = $order->getAllVisibleItems();
 		$cartData["count"] = count($items);
@@ -203,7 +202,7 @@ class Nicepay_VirtualAccount_PaymentController extends Mage_Core_Controller_Fron
 
 			);
 			
-			$this->sentManualPaymentEmail($order, $variable);
+			// $this->sentManualPaymentEmail($order, $variable);
 
 			Mage::register('desc', "Payment of invoice No ".$response->referenceNo);
 			Mage::register('amount', $grandTotal);
@@ -213,6 +212,12 @@ class Nicepay_VirtualAccount_PaymentController extends Mage_Core_Controller_Fron
 			Mage::register('expDate', $vaExpiryDate);
 			$returnUrl = Mage::getUrl('virtualaccount/payment/success', array('_secure' => true));
 			Mage::register('returnUrl', $returnUrl);
+			
+			//send email
+			
+			$bank_code_email = array('va'=> $response->bankVacctNo, 'bank_code' => $bankCd, 'bank_label' => $this->bank_info($bankCd)["label"]);
+			$this->sentNewOrderEmail($order, $bank_code_email);
+
 			$template = 'virtualaccount/redirect.phtml';
 		}elseif(isset($response->resultCd)){
 			// API data not correct or error happened in bank system, you can redirect back to checkout page or echo error message.
@@ -350,6 +355,15 @@ class Nicepay_VirtualAccount_PaymentController extends Mage_Core_Controller_Fron
 
 		$this->getLayout()->getBlock('content')->append($block);
         $this->renderLayout();
+	}
+
+	//tambahan info
+	public function infoAction(){
+			$this->loadLayout();
+			$block = $this->getLayout()->createBlock('Mage_Core_Block_Template','virtualaccount',array('template' => 'virtualaccount/info.phtml'));
+			$this->getLayout()->getBlock('root')->setTemplate('page/1column.phtml');
+			$this->getLayout()->getBlock('content')->append($block);
+			$this->renderLayout();
 	}
 
 	public function includes(){
@@ -793,7 +807,8 @@ class Nicepay_VirtualAccount_PaymentController extends Mage_Core_Controller_Fron
 			'order' => $order,
 			'store_name' => $sender_name,
 			'store_email' => $sender_email,
-			'payment_html' => $payment_name
+			'payment_html' => $payment_name,
+			'nicepay_req' => $extVariable,
 		);
 
 		$receiveEmail = $order->getCustomerEmail();
@@ -881,7 +896,7 @@ class Nicepay_VirtualAccount_PaymentController extends Mage_Core_Controller_Fron
 		}
 	}
 
-	public function sentManualPaymentEmail($order, $extVariable){
+	// public function sentManualPaymentEmail($order, $extVariable){
 		// This is the template name from your etc/config.xml
 
 		//***********************************************
