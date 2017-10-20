@@ -11,8 +11,8 @@ class Nicepay_VirtualAccount_PaymentController extends Mage_Core_Controller_Fron
 		$this->includes();
 
 		$nicepay = new NicepayLib();
-
-		$todayDate = date('Y-m-d H:i:s', time());
+		$todayDate = date('Y-m-d H:i:s');
+		$todayDate = date('Y-m-d H:i:s',strtotime($todayDate."+7hours"));
 		echo $todayDate . '<br>';
 
 		$yesterdayDate =  date('Y-m-d H:i:s', strtotime($todayDate." -2 days"));
@@ -83,7 +83,7 @@ class Nicepay_VirtualAccount_PaymentController extends Mage_Core_Controller_Fron
 	public function redirectAction() {
 		$this->includes();
 
-		$js_base_url = Mage::getBaseUrl(Mage_Core_Model_Store::URL_TYPE_JS);
+		$js_base_url = Mage::getBaseUrl(Mage_Core_Model_Store::URL_TYPE_WEB).'js/';
 		Mage::register('js_base_url',$js_base_url);
 
 		$orderid = Mage::getSingleton('checkout/session')->getLastRealOrderId();
@@ -242,7 +242,8 @@ class Nicepay_VirtualAccount_PaymentController extends Mage_Core_Controller_Fron
 		$nicepay->set('deliveryCountry', "indonesia");//$deliveryCountry
 
 		$nicepay->set('vacctValidDt', $vaExpiryDate); // Set VA expiry date example: +1 day
-    $nicepay->set('vacctValidTm', date('His')); // Set VA Expiry Time
+    	$nowTime = date('His');
+    	$nicepay->set('vacctValidTm', date('His',strtotime($nowTime.'+7hours'))); // Set VA Expiry Time
 
 		//running debug
 		$nicepay_log["isi"] = $nicepay;

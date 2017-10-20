@@ -18,8 +18,9 @@ class Nicepay_VirtualAccount_Model_Observer
 
 		$nicepay = new NicepayLib();
 
-		
-		$todayDate = date('Y-m-d H:i:s', time());
+		//add 7 jam
+		$todayDate = date('Y-m-d H:i:s');
+		$todayDate = date('Y-m-d H:i:s',strtotime($todayDate."+7hours"));
 		
 
 		$yesterdayDate =  date('Y-m-d H:i:s', strtotime($todayDate." -2 days"));
@@ -71,7 +72,7 @@ class Nicepay_VirtualAccount_Model_Observer
 	    			
 							
 	    		}
-	    		
+
 	    		//kalau statusnya cancel
 	    		if ($paymentStatus->status == '4') {
 		    			$order->setData('state', "canceled");
