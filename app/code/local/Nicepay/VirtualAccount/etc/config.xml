@@ -12,6 +12,27 @@
         <class>Nicepay_VirtualAccount_Model</class>
       </virtualaccount>
     </models>
+    <resources>
+      <virtualaccount_setup>
+        <setup>
+          <module>Nicepay_VirtualAccount</module>
+          <class>Mage_Core_Model_Resource_Setup</class>
+        </setup>
+        <connection>
+          <use>core_setup</use>
+        </connection>
+      </virtualaccount_setup>
+      <virtualaccount_read>
+        <connection>
+          <use>core_read</use>
+        </connection>
+      </virtualaccount_read>
+      <virtualaccount_write>
+        <connection>
+          <use>core_write</use>
+        </connection>
+      </virtualaccount_write>
+    </resources>
     <helpers>
       <virtualaccount>
         <class>Nicepay_VirtualAccount_Helper</class>
@@ -32,7 +53,14 @@
 		</email>
 	</template>
   </global>
-  
+  <crontab>
+    <jobs>
+      <virtualaccount>
+        <schedule><cron_expr>*/5 * * * *</cron_expr></schedule>
+        <run><model>virtualaccount/observer::checkTransaction</model></run>
+      </virtualaccount>
+    </jobs>
+  </crontab>
   <default>
     <payment>
       <virtualaccount>

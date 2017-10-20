@@ -6,6 +6,79 @@ www.nicepay.co.id
 */
 
 class Nicepay_VirtualAccount_PaymentController extends Mage_Core_Controller_Front_Action{
+	public function cronAction(){
+		
+		$this->includes();
+
+		$nicepay = new NicepayLib();
+
+		$todayDate = date('Y-m-d H:i:s', time());
+		echo $todayDate . '<br>';
+
+		$yesterdayDate =  date('Y-m-d H:i:s', strtotime($todayDate." -2 days"));
+
+		echo $yesterdayDate . '<br>';
+		echo $datean = date('Y-m-d',strtotime($yesterdayDate)).' 00:00:00';
+		echo "<br>";
+		
+		$order_collection = Mage::getModel('sales/order')->getCollection()
+			->addAttributeToFilter('created_at', array('from'=> $datean, 'to'=> $yesterdayDate))
+            ->addAttributeToFilter('status', array('eq' => 'pending'));
+
+
+	   
+	    foreach ($order_collection as $order) {
+	    	$payment_code = $order->getPayment()->getMethodInstance()->getCode();
+	    	if ($payment_code == 'virtualaccount') {
+
+	    		echo $tXid = $order->getNicepayTransactionId();
+	    		echo "<br>";
+	    		echo $amt = $order->getGrandTotal();
+	    		echo "<br>";
+	    		
+	    		echo $referenceNo = $order->getIncrementId();
+	    		
+	    		echo "<br>";
+	    		$paymentStatus = $nicepay->checkPaymentStatus($tXid, $referenceNo, $amt);
+	    	
+	    	
+	    		if ($paymentStatus->status == '3') {
+	    			
+	    			echo $paymentStatus->vacctValidDt;
+	    			echo "<br>";
+	    			echo $paymentStatus->vacctValidTm;
+	    			echo "<br>";
+	    			$time = $paymentStatus->vacctValidDt.' '.$paymentStatus->vacctValidTm;
+	    			$time = strtotime($time);
+	    			$today_int = strtotime($todayDate);
+	    			
+	    			if ($time <= $today_int) {
+		    			$order->setData('state', "canceled");
+						$order->setStatus("canceled");
+		    			$history = $order->addStatusHistoryComment('Order cancelled by cronjob.', false);
+	    				$history->setIsCustomerNotified(true);
+	    				$order->save();
+	    			}
+	    			
+							
+	    		}
+
+	    		//kalau statusnya cancel
+	    		if ($paymentStatus->status == '4') {
+		    			$order->setData('state', "canceled");
+						$order->setStatus("canceled");
+		    			$history = $order->addStatusHistoryComment('Order cancelled by cronjob.', false);
+	    				$history->setIsCustomerNotified(true);
+	    				$order->save();
+	    		}
+	    		
+	    		
+	    		echo '<br>';
+	    		
+	    	}
+	    
+	    }
+	}
 	// The redirect action is triggered when someone places an order
 	public function redirectAction() {
 		$this->includes();
@@ -138,7 +211,7 @@ class Nicepay_VirtualAccount_PaymentController extends Mage_Core_Controller_Fron
 
 		// Populate Mandatory parameters to send
 		$dateNow        = date('Ymd');
-  	$vaExpiryDate   = date('Ymd', strtotime($dateNow . ' +1 day')); // Set VA expiry date +1 day (optional)
+  	$vaExpiryDate   = date('Ymd', strtotime($dateNow . ' +2 days')); // Set VA expiry date +1 day (optional)
 
 		$nicepay->set('payMethod', '02');
 		$nicepay->set('currency', $orderCurrency);
@@ -213,8 +286,14 @@ class Nicepay_VirtualAccount_PaymentController extends Mage_Core_Controller_Fron
 			$returnUrl = Mage::getUrl('virtualaccount/payment/success', array('_secure' => true));
 			Mage::register('returnUrl', $returnUrl);
 			
-			//send email
+
+
+			//tmbahin transaction id dan nommor VA
+			$order->setNicepayTransactionId($response->tXid);
+			$order->setNicepayVa($response->bankVacctNo);
+			$order->save();
 			
+			//send email
 			$bank_code_email = array('va'=> $response->bankVacctNo, 'bank_code' => $bankCd, 'bank_label' => $this->bank_info($bankCd)["label"]);
 			$this->sentNewOrderEmail($order, $bank_code_email);
 
@@ -325,6 +404,8 @@ class Nicepay_VirtualAccount_PaymentController extends Mage_Core_Controller_Fron
 			}
 		}
 	}
+
+	
 
 	public function successAction(){
 		if(!isset($_REQUEST)){
