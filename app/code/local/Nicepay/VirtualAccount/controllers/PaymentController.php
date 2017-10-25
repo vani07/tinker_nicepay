@@ -919,7 +919,9 @@ class Nicepay_VirtualAccount_PaymentController extends Mage_Core_Controller_Fron
 	public function sentUpdateOrderEmail($order){
 		
 		// This is the template name from your etc/config.xml
-		$template_id = 'nicepay_order_status_email';
+		// $template_id = 'nicepay_order_status_email';
+		$storeId = Mage::app()->getStore()->getId();
+		$template_id = Mage::getStoreConfig('sales_email/order_comment/template', $storeId);;
 
 		$customerId = $order->getCustomerId();
 		$customer = Mage::getModel('customer/customer')->load($customerId);
@@ -946,7 +948,7 @@ class Nicepay_VirtualAccount_PaymentController extends Mage_Core_Controller_Fron
 		$sender_email = Mage::getStoreConfig('trans_email/ident_general/email', $storeId);
 
 		// Load our template by template_id
-		$emailTemplate = Mage::getModel('core/email_template')->loadDefault($template_id);
+		$emailTemplate = Mage::getModel('core/email_template')->load($template_id);
 
 		$orderId = $order->getIncrementId();
 		$comment = "Berhasil !!!";
