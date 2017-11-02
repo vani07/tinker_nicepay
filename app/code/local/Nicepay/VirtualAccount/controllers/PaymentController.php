@@ -211,7 +211,7 @@ class Nicepay_VirtualAccount_PaymentController extends Mage_Core_Controller_Fron
 
 		// Populate Mandatory parameters to send
 		$dateNow        = date('Ymd');
-  	$vaExpiryDate   = date('Ymd', strtotime($dateNow . ' +2 days')); // Set VA expiry date +1 day (optional)
+  		$vaExpiryDate   = date('Ymd', strtotime($dateNow . ' +2 days')); // Set VA expiry date +1 day (optional)
 
 		$nicepay->set('payMethod', '02');
 		$nicepay->set('currency', $orderCurrency);
@@ -915,13 +915,13 @@ class Nicepay_VirtualAccount_PaymentController extends Mage_Core_Controller_Fron
 		}
 		
 	}
-
-	public function sentUpdateOrderEmail($order){
-		
+	public function testAction(){
 		// This is the template name from your etc/config.xml
 		// $template_id = 'nicepay_order_status_email';
+		$order = Mage::getModel('sales/order')->loadByIncrementId(100010007);
 		$storeId = Mage::app()->getStore()->getId();
-		$template_id = Mage::getStoreConfig('sales_email/order_comment/template', $storeId);;
+		// $template_id = Mage::getStoreConfig('sales_email/order_comment/template', $storeId);
+		$template_id = '16';
 
 		$customerId = $order->getCustomerId();
 		$customer = Mage::getModel('customer/customer')->load($customerId);
@@ -951,30 +951,95 @@ class Nicepay_VirtualAccount_PaymentController extends Mage_Core_Controller_Fron
 		$emailTemplate = Mage::getModel('core/email_template')->load($template_id);
 
 		$orderId = $order->getIncrementId();
+		$order_grandTotal = $order->getGrandTotal();
+		$orderTotal = Mage::helper('core')->currency($order_grandTotal, true, false);
 		$comment = "Berhasil !!!";
 		// Here is where we can define custom variables to go in our email template!
 		$variables = array(
-			'order' => $order,
+			'order_id' => $orderId,
+			'order_total' => $orderTotal,
 			'store_name' => $sender_name,
 			'store_email' => $sender_email
 		);
 
-		$processedTemplate = $emailTemplate->getProcessedTemplate($variables);
+		$emailTemplate->getProcessedTemplate($variables);
 
-		//Sending E-Mail to Customers.
-		$mail = Mage::getModel('core/email')
-		 ->setToName($receiveName)
-		 ->setToEmail($receiveEmail)
-		 ->setBody($processedTemplate)
-		 ->setSubject('Update Status Order #'.$orderId)
-		 ->setFromEmail($sender_email)
-		 ->setFromName($sender_name)
-		 ->setType('html');
+		$emailTemplate->setSenderEmail($sender_email);
 
+		$emailTemplate->setSenderName($sender_name);
+
+		$emailTemplate->addBcc('ella@tinkerlust.com');
 		try{
-			//Confimation E-Mail Send
-			$mail->send($template_id);
+			echo "sended";
+			$emailTemplate->send($receiveEmail,$receiveName, $variables);
+			
 		}catch(Exception $error){
+			
+			Mage::getSingleton('core/session')->addError($error->getMessage());
+			return false;
+		}
+	}
+
+	public function sentUpdateOrderEmail($order){
+		
+		// This is the template name from your etc/config.xml
+		// $template_id = 'nicepay_order_status_email';
+		$storeId = Mage::app()->getStore()->getId();
+		// $template_id = Mage::getStoreConfig('sales_email/order_comment/template', $storeId);
+		$template_id = '16';
+
+		$customerId = $order->getCustomerId();
+		$customer = Mage::getModel('customer/customer')->load($customerId);
+		
+		if($order->getCustomerIsGuest()){
+			$billing = $order->getBillingAddress()->getData();
+			$shipping = $order->getShippingAddress()->getData();
+		}else{
+			$billing = $customer->getPrimaryBillingAddress()->getData();
+			$billing['email'] = $order->getBillingAddress()->getEmail();
+			$shipping = $customer->getPrimaryShippingAddress()->getData();
+			$shipping['email'] = $order->getShippingAddress()->getEmail();
+		}
+
+		$billingNm = $billing['firstname']." ".$billing['middlename']." ".$billing['lastname'];
+		$billingEmail = $billing['email'];
+
+		// Who were sending to...
+		$receiveEmail = $billingEmail;
+		$receiveName   = $billingNm;
+
+		$storeId = Mage::app()->getStore()->getId();
+		$sender_name = Mage::getStoreConfig('trans_email/ident_general/name', $storeId);
+		$sender_email = Mage::getStoreConfig('trans_email/ident_general/email', $storeId);
+
+		// Load our template by template_id
+		$emailTemplate = Mage::getModel('core/email_template')->load($template_id);
+
+		$orderId = $order->getIncrementId();
+		$order_grandTotal = $order->getGrandTotal();
+		$orderTotal = Mage::helper('core')->currency($order_grandTotal, true, false);
+		$comment = "Berhasil !!!";
+		// Here is where we can define custom variables to go in our email template!
+		$variables = array(
+			'order_id' => $orderId,
+			'order_total' => $orderTotal,
+			'store_name' => $sender_name,
+			'store_email' => $sender_email
+		);
+
+		$emailTemplate->getProcessedTemplate($variables);
+
+		$emailTemplate->setSenderEmail($sender_email);
+
+		$emailTemplate->setSenderName($sender_name);
+
+		$emailTemplate->addBcc('ella@tinkerlust.com');
+		
+		try{
+			$emailTemplate->send($receiveEmail,$receiveName, $variables);
+			
+		}catch(Exception $error){
+			
 			Mage::getSingleton('core/session')->addError($error->getMessage());
 			return false;
 		}
