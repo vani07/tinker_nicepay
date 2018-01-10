@@ -54,8 +54,9 @@ class Nicepay_VirtualAccount_Model_Observer
 	    			
 	    			if ($time <= $today_int) {
 	    				
-		    			$order->setData('state', "canceled");
-						$order->setStatus("canceled");
+		    			// $order->setData('state', "canceled");
+						// $order->setStatus("canceled");
+						$order->cancel();
 		    			$history = $order->addStatusHistoryComment('Order cancelled by cronjob.', false);
 	    				$history->setIsCustomerNotified(true);
 	    				
